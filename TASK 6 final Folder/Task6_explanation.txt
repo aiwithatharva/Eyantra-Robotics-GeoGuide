@@ -1,0 +1,51 @@
+Task 6
+Model Used for detecting events:  https://drive.google.com/file/d/1B-0fkLq1YxO1XooW8azMd-mmwTPasfKo/view?usp=sharing
+
+Explanation of the Algorithm Used.
+Image Processing:
+    1. We first take the input frame from the camera feed using opencv cap.read().
+    2. All aruco markers are detected in the Image.
+    3. Find the x and y coordinates of the IDs 4,5,6,7 which are at the corner of the image.
+    4. Now crop the frame so that we remove all the unnecessary areas in the frame.
+    5. The center coordinates of all the markers are stored in a dictionary so that it can be used again and we don't need to detect all markers repeatedly.
+    6. Using the detected markers create new virtual markers at the exact point of the intersection road by taking an appropriate weighted average. This is used in navigation.
+    7. We use a Gaussian blur filter to make the image smooth and reduce camera noise.
+    8. We use warpPerspective, and perspectiveTrasnform functions from opencv which can change perspective so that distortions due to camera are minimized
+
+Event Detection:
+    1. using opencv we first detect square contours at locations A, B, C, D, E.
+    2. Event images are then cropped from these square counters.
+    3. We use VGG 16 fine-tuned model for the classification task.
+    4. We performed extensive augmentation of given data by varying contrast, sharpness, brightness, and saturation.
+    5. then we trained it on Google Colab using the Pytorch framework.
+    6. It is trained on 6 categories "None" included.
+    7. Once events are detected these are written in csv file.
+
+Line following:
+    1. We attached 5 IR sensors in front of the bot.
+    2. Two Algorithms for roads with middle lines and roads which are running simultaneously which can be seen in the code.
+    3. When the middle 2 IR sensors are high for some threshold it detects a black intersection in the road and only then it makes decisions to turn right or left.
+    4. Turning right or left is also done using sensors, for example, if we want to turn right, we change the direction till the right sensor is low.
+    5. In locations where a complete 180-degree rotation is required, we utilize a similar method, but with increased delay, called rotate.
+
+Path Planning:
+    1. The area is divided into 17 stop points these include the event location and the intersection point of the road
+    2. These 17 points are virtual as given in the image processing part.
+    3. These stop Points are used for path planning.
+    5. Find Euclidian distance between all pairs of points that are reachable from particular points
+    6. create an adjacency matrix of the Euclidean distance.
+    7. We use the Floyd Warshall Algorithm to find all pair's shortest paths between the points.
+    8. This shortest path is returned in a list.
+    9. We append the paths from various pairs of stop points according to priority.
+    10. At the end we append the path from the lowest priority to the start of the path.
+    11. In our code we also allow the robot to change the direction 180 degrees hence optimizing path length.
+    12. We find the direction to turn the robot using the orientation of the robot currently and the direction of the next stop point relative to the current position.
+    13. Three variables "this Stop", "Next Stop", "turn Direction" and "mask" are transmitted to the esp32 module using WIFI UDP protocol.
+    14. Once these parameters are received at the esp32 side it commands the robot the either change the direction or to move straight as per the line following. 
+    15. When the bot reaches the stop where there is the event, a special variable is sent, called mask which tells it whether it should stop there or not.
+    16. When the direction of the robot is South and we Stop/End location, a function in the esp32 side is called to make the robot stop and beep for 5 seconds.
+
+
+Qgis mapping:
+    1. Using warpPerspective, and perspectiveTransform functions from opencv we find the linear transformation from arena to qgis map.
+    2. By finding the inverse of the transformation then finding a particular point in the qgis.

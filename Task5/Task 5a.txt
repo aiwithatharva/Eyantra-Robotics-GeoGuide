@@ -1,0 +1,46 @@
+Task 5a
+
+
+Explanation of the Algorithm Used.
+Image Processing:
+    1. We first take the input frame from the camera feed using opencv cap.read().
+    2. All aruco markers are detected in the Image.
+    3. Find the x, y coordinates of the IDs 4,5,6,7 which are at the corner of the image.
+    4. Now crop the frame so that we remove all the unnecessary areas in the frame.
+    5. The center coordinates of all the markers are stored in a dictionary so that it can be used again and we don't need to detect all markers repeatedly.
+    6. We use a gaussian blur filter to make the image smooth and reduce camera noise.
+
+Event Detection:
+    1. using opencv we first detect square contours.
+    2. Event images are then cropped from these square counters.
+    3. We use VGG 16 fine-tuned model for the classification task.
+    4. We performed extensive augmentation of given data by varying contrast , sharpness , brightness, and saturation.
+    5. then we trained it on Google Colab using pytorch framework.
+    6. It is actually trained on 6 categories "None" included.
+    7. Once events are detected these are written in csv file.
+
+Line following:
+    1. We attached 4 IR sensors in front of the bot.
+    2. Two Algorithm of roads with middle line and road without run simultaneously which can be seen in the code.
+    3. When middle 2 IR sensors are high it detects a black intersection in the road and only then it makes decisions to turn right or left.
+    4. Turning right or left is also done using sensors , for example if we want to turn right, we change the direction till the right senor is low.
+    5. At some location where complete 180-degree rotation is required there also we use similar method but using more delay.
+
+Path Planning:
+    1. area is divided into 19 stop points these include event location as well as direction change location.
+    2. using the x, y coordinates of the markers we got from Image Processing part we create some virtual aruco ids at some important locations like Infront of the events.
+    3. These aruco ids are used for path planning
+    4. We take nearest Aruco marker at the stop points extract its latitude longitude from the lat_lon.csv.
+    5. Find Euclidian distance between all pair of points
+    6. create a adjacency matrix of the Euclidean distance.
+    7. We use Floyd War shall Algorithm to find all pair shortest path between the points.
+    8. This shortest path is returned in list.
+    9. We append the paths from various pairs of stop points according to priority.
+    10. At end we append the path from lowest priority to start of the path.
+    11. In our code we also allow the robot to change the direction 180 degree hence optimising path length.
+    12. We find direction to turn the robot using the orientation of the robot currently and direction of the next stop point relative to the current position.
+    13. Three variables "this Stop", "next Stop", and "turn Direction" are transmitted to the esp32 module  using WIFI UDP protocol.
+    14. Once these parameters are received at the esp32 side it commands the robot the either change the direction or to move straight as per line following. 
+    15. When the bot reaches the stop where there is the event, a special variable is sent to the called mask which tells it it should stop there or not.
+    16. When the direction of robot is South and we end stop point, a function in the esp32 side is called to make the robot stop and beep for 5 seconds.
+

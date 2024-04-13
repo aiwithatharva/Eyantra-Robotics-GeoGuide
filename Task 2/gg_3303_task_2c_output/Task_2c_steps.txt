@@ -1,0 +1,19 @@
+Team ID = GG_3303 
+
+Trained weights drive link = "https://drive.google.com/file/d/1-12-gU16evlSdYBp3QKNHk1kHfV2f7Ve/view?usp=sharing"    
+complete model = "https://drive.google.com/file/d/11wD1i_7EUrSYCFtvj5asvVx2QUbBbDKn/view?usp=sharing"  
+###############################################################################
+'''
+Please write the complete steps taken by your team explaining how you completed Task 2C. It is adviced to be as elaborate as possible.
+
+1. We first observed the sample.png, there it was clear that the input image that we would get will be tiny.
+2. We found out that the input image is 50*50 pixels.
+3. Then we used the open cv library to extract those images.
+4. The challenge was to extract the images in the correct order thus we first found the coordinates of the windows and then arranged the extracted images in a specified order inside a list.
+5. We cropped out the white frame in the images.
+6 . Using this method on our previous model from taskb we found that accuracy was very low, the reason being our model was overly complex for 50 * 50 images
+7. Thus we need to retrain the model.
+8. We resized the complete training dataset to 50 * 50, then trained VGG - 16 feature extractor with a relatively small dense layer.
+9. Then while training we got around 90% accuracy.
+10. Then we used that newly trained model on the taskc.
+

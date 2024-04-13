@@ -1,0 +1,5 @@
+Team ID = GG_3303
+
+Trained Complete model drive link = "https://drive.google.com/file/d/1uLQIskqtcCLPIIDQSu_cm6zEfP9b6118/view?usp=sharing"
+
+Trained weights only drive link = "https://drive.google.com/file/d/1M0tMPxsEuyEsM6q_R36gSm0E8_FBJyAt/view?usp=sharing"

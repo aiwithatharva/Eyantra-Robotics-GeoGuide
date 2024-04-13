@@ -1,0 +1,51 @@
+Team ID = GG_3303
+Trained weights drive link = "https://drive.google.com/file/d/1-rUgqdM18KM59quNExVlcz-btgPJZCSR/view?usp=sharing"
+
+###############################################################################
+'''
+Please write the complete steps taken by your team explaining how you completed Task 2B. It is advised to be as elaborate as possible.
+
+1. First we downloaded training files from the portal.
+2. Explore the data, we found that there are 5 categories.
+3. Thus we need to make a multiclass image classification model.
+4. We find that on the website it is given that we can use a pre-trained model hence we researched the best pretrained models.
+5. We found resNext and VGG 16 as two models which we tried.
+6. First we used a smaller model i.e. resNext and got an accuracy of about 33 out of 40.
+7. Then we tried using VGG 16. It still did not improve a lot of accuracy.
+8. Then we separated the FEATURE EXTRACTOR from the VGG 16 and freezed its gradient then added a dense fully connected layer sequentially.
+9. This gave above 35/40 accuracy.
+11. We tried various optimization tools like Stochastic gradient descent, Adam, etc but found that SGD worked best here.
+12. We tried various configurations of the fully connected dense layer and found optimal configurations.
+13. We plotted the train and test loss to find the optimal number of epochs and to address overfitting and underfitting.
+14. After we found all optimal hyperparameters we used a complete training set to train the model.
+15. We then found which index of the model prediction gives what category by using a selective training set
+16. According to it we arranged the output list in the task2b_py file.
+
+
+
+Now we shall explain the code used to train the model step by step.
+
+1. Since we saved our training data on Drive we Mounted Google Drive on colab using "from google.colab import drive
+drive.mount('/content/drive')"
+2. We imported all the important libraries and modules.
+3. Then we did data preprocessing cropping the image to 224 pixals which is standard practice.
+4. We also did data augmentation by Random Resize, Random Crop, Horizontal Filp, etc.
+5. We normalize the data within a range as per standards.
+6. Then we load the dataset in dataloaders.
+7. Using sci-kit learn Train test split we split the data in the train set and validation set.
+8. In the next step we define the pre-trained VGG 16 model from the torchvision library.
+9. We extract only convolutional layers from the model as a feature extractor and then freezed it.
+10. We define a custom classifier that is out of dense fully connected layers.
+11. The final model we define as sequential of feature extractor and custom classifier.
+12. We define loss as CrossEntropyloss for multiclass classification.
+13. We set the optimizer to Stochastic gradient descent.
+14. We then define a device variable that directs the data to GPU if it is available or cpu otherwise.
+15. Then we loop over the number of epochs and set the model to train mode. Train the model and add loss to a list.
+16. In that loop itself we also evaluate the test set and store accuracy in a list.
+17. Using matplotlib we plot the test and train accuracy with respect to epochs.
+18 . Saved the model using torch.saved
+19. Uploaded the model on the drive.
+20. Load the model in the task_2b.py file.
+21. Resize the test data using transforms exactly the same as the training.
+22. Use model.eval() mode to find the categories predicted and return it.
+
